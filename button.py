@@ -8,12 +8,18 @@ import time
 root = Tk()
 button = Button(root)
 e = Entry(root, width=35, borderwidth=5)
-e.grid(row=0, column=0, columnspan=3, padx=10, pady=10)
+#e.grid(row=0, column=0, columnspan=3, padx=10, pady=10)
+e.pack(padx=10, pady=10)
+
 
 wb = xl.load_workbook('Daily Transactions.xlsx')
 sheet = wb['Sheet1']
 cell = sheet['a']
 #  + " " + str(present_minute) + ":" \+ str(present_second)
+
+
+def cls():
+    e.delete(0, END)
 
 
 def present_date_time():
@@ -25,21 +31,6 @@ def present_date_time():
     present = str(present_year) + '-' + str(present_month) + "-" + str(present_day)
 
     return present
-
-
-def transaction_type_pos(sheet):
-    count = 0
-    row = 5
-    while True:
-        count += 1
-        if count >= row:
-            second_column = sheet.cell(count, 2)
-            if second_column.value is None:
-                second_column.value = "POS"
-                break
-    date_time_now = present_date_time()
-    filename = date_time_now + '.xlsx'
-    wb.save(filename)
 
 
 def withdrawal(sheet):
@@ -59,6 +50,22 @@ def withdrawal(sheet):
     e.delete(0, END)
 
 
+def transaction_type_pos(sheet):
+    count = 0
+    row = 5
+    while True:
+        count += 1
+        if count >= row:
+            second_column = sheet.cell(count, 2)
+            if second_column.value is None:
+                second_column.value = "POS"
+                break
+    e.delete(0, END)
+    date_time_now = present_date_time()
+    filename = date_time_now + '.xlsx'
+    wb.save(filename)
+
+
 def transaction_type_transfer(sheet):
     count = 0
     row = 5
@@ -69,12 +76,10 @@ def transaction_type_transfer(sheet):
                 sheet.cell(count, 2).value = "Transfer"
                 break
 
-    e.insert(0, 'Transfer')
+    e.delete(0, END)
     date_time_now = present_date_time()
     filename = date_time_now + '.xlsx'
     wb.save(filename)
-
-
 
 
 def input_action(sheet):
@@ -104,17 +109,23 @@ def input_action(sheet):
     e.insert(0, 'POS or Transfer')
 
 
-pos_button = Button(root, text="POS", padx=40, pady=20, command=lambda: transaction_type_pos(sheet))
-pos_button.grid(row=1, column=0)
+pos_button = Button(root, text="POS", padx=20, pady=20, command=lambda: transaction_type_pos(sheet))
+enter_button = Button(root, text="Enter", padx=17, pady=20, command=lambda: input_action(sheet))
+transfer_button = Button(root, text="Transfer", padx=10, pady=20, command=lambda: transaction_type_transfer(sheet))
+withdrawal_button = Button(root, text="Withdrawal", padx=3, pady=20, command=lambda: withdrawal(sheet))
+# cls_button = Button(root, text="cls", padx=10, pady=10, command=lambda: cls())
 
-enter_button = Button(root, text="Enter", padx=40, pady=20, command=lambda: input_action(sheet))
-enter_button.grid(row=1, column=1)
 
-transfer_button = Button(root, text="Transfer", padx=40, pady=20, command=lambda: transaction_type_transfer(sheet))
-transfer_button.grid(row=3, column=0)
+# enter_button.grid(row=1, column=1)
+# pos_button.grid(row=1, column=0)
+# enter_button.grid(row=1, column=1)
+# withdrawal_button.grid(row=3, column=1)
+# cls_button.pack()
+pos_button.pack(side=LEFT)
+transfer_button.pack(side=RIGHT)
+withdrawal_button.pack(side=BOTTOM)
+enter_button.pack(pady=10)
 
-withdrawal_button = Button(root, text="Withdrawal", padx=40, pady=20, command=lambda: withdrawal(sheet))
-withdrawal_button.grid(row=3, column=1)
 
 root.mainloop()
 
@@ -129,13 +140,8 @@ root.mainloop()
 
 
 
-path = Path("Daily_Transaction")
-if path.exists():
-    path is TRUE
-else:
-    print(path.mkdir())
 
-wb.save('work book 86.xslx')
+
 
 
 
